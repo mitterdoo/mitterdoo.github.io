@@ -1,0 +1,324 @@
+<title>Timer</title>
+<body>
+	<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<style>
+
+		@font-face {
+			font-family: DigitalSeven;
+			src: url( 'digital-7.ttf' );
+		}
+		body
+		{
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate( -50%, -50% );
+			-webkit-transform: translate( -50%, -50% );
+
+			font-family: Verdana;
+			text-align: center;
+			background-color: #112211;
+			color: white;
+		}
+		a:link
+		{
+			color: green;
+		}
+		.timer
+		{
+			font-family: DigitalSeven;
+			font-size: 404px;
+			display: none;
+		}
+		#timer-fg
+		{
+			color: #00FF00;
+			position: absolute;
+			left: 0px;
+			top: 0px;
+			text-shadow: 0 0 32px #00CC00,0 0 16px #00CC00,0 0 64px #00CC00;
+		}
+
+		#timer-bg
+		{
+			color: #0E1E0E;
+			position: relative;
+		}
+		#makeNew
+		{
+			display: none;
+		}
+		#error
+		{
+			font-size: 12px;
+			color: red;
+			font-weight: bold;
+			display: none;
+		}
+		#stop
+		{
+			border-style: solid;
+			border-size: 4px;
+			color: red;
+			background-color: #440000;
+			font-family: DigitalSeven;
+			font-size: 36px;
+			padding: 8px 32px;
+			text-decoration: none;
+		}
+		#stop:hover
+		{
+			background-color: #880000;
+		}
+		#stop:active
+		{
+			background-color: #660000;
+		}
+		#button
+		{
+			border-style: solid;
+			border-size: 4px;
+			color: #00FF00;
+			background-color: #004400;
+			font-size: 20px;
+			padding: 8px;
+			text-decoration: none;
+		}
+		#button:hover
+		{
+			background-color: #448844;
+		}
+		#button:active
+		{
+			background-color: #336633;
+		}
+		#buttons
+		{
+			display: none;
+		}
+
+	</style>
+
+	<div id="Settings">
+		<h1>Timer</h1>
+		Enter the number of seconds to use
+		<br>
+		<br>
+
+		<input type="number" id="timeInput" min="1" max="5999">
+		<button id="create">Create</button>
+		<br>
+	</div>
+	<br>
+	<div id="error">
+	</div>
+
+	<div class="timer" id="timer-bg">
+		88:88
+		<div id="timer-fg">
+			00:00
+		</div>
+	</div>
+	<br>
+	<div id="makeNew">
+		<a href="./">Create another timer</a>
+	</div>
+
+	<div id="buttons">
+		<a href="javascript:fontSize(false)" id="button">A<sup>&#9660;</sup></a>
+		<a href="javascript:stopTimer(true)" id="stop">Stop Timer</a>
+		<a href="javascript:fontSize(true)" id="button">A<sup>&#9650;</sup></a>
+	</div>
+	<audio id="alarm" src="alarm.mp3"></audio>
+
+	<script>
+
+		$("body").hide().fadeIn( 1000 );
+		function error( err )
+		{
+			$("#error").text( err ).fadeIn().delay(3000).fadeOut();
+		}
+
+		function submit( elem )
+		{
+			var val = Number( elem.value );
+			if( val && val > 0 && val <= 5999 )
+				createTimer( val );
+			else
+			{
+				error( "Please enter a value between 1 and 5,999" );
+			}
+		}
+		$("#timeInput").keypress( function( e )
+		{
+			if( e.which == 13 )
+			{
+				submit( this );
+			}
+		});
+		$("#create").click( function()
+		{
+			submit( $("#timeInput").get(0) );
+		})
+
+		function createTimer( length )
+		{
+			var time = Date.now() / 1000 + length;
+			document.cookie = "ownerof=" + time;
+			window.location.href = "?until=" + time;
+		}
+		function getCookie(cname) { // w3schools
+			var name = cname + "=";
+			var ca = document.cookie.split(';');
+			for(var i=0; i<ca.length; i++) {
+				var c = ca[i];
+				while (c.charAt(0)==' ') c = c.substring(1);
+				if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+			}
+			return "";
+		}
+		function urlParam( name ) // stackoverflow
+		{
+			var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+			if (results==null){
+				return null;
+			}
+			else{
+				return results[1] || 0;
+			}
+		}
+		var FontSize = urlParam( "font" );
+		if( FontSize <= 0 )
+			FontSize = 404;
+		function fontSize( inc )
+		{
+			var mult = inc ? 1 : -1;
+			var spacing = 32;
+			var newSize = Number( FontSize ) + spacing * mult;
+			newSize = Math.max( 128, newSize );
+
+			var href = window.location.href;
+			if( href.search( '&' ) > -1 )
+			{
+				var loc = href.search( '&' );
+				href = href.substring( 0, loc + 1 ) + "font=" + newSize;
+				window.location.href = href;
+			}
+			else
+			{
+				window.location.href += "&font=" + FontSize;
+			}
+		}
+		$('.timer').css( 'font-size', FontSize );
+		var IsOwner = Number( getCookie( "ownerof" ) );
+		function timer( to )
+		{
+			$('.timer').show();
+			if( IsOwner == to )
+			{
+				$('#buttons').show();
+			}
+			stopTimer = function( owner )
+			{
+				var time = to - Date.now()/1000;
+				$("#buttons").fadeOut();
+				var text = "ER:OR";
+
+				var min = 0;
+				var sec = Math.ceil( time );
+				while( sec >= 60 )
+				{
+					sec -= 60;
+					min++;
+				}
+				if( min < 10 )
+					min = "0" + min;
+				if( sec < 10 )
+					sec= "0" + sec;
+				text = min + ':' + sec;
+				window.location.href = "?stopped=" + text;
+			}
+			var ID;
+			var PlayedAlarm = false;
+			ID = setInterval( function()
+			{
+				var time = Math.max( 0, to - Date.now()/1000 );
+				var text;
+
+				if( time > 0 )
+				{
+					var min = 0;
+					var sec = Math.ceil( time );
+					while( sec >= 60 )
+					{
+						sec -= 60;
+						min++;
+					}
+					if( min < 10 )
+						min = "0" + min;
+					if( sec < 10 )
+						sec= "0" + sec;
+					var colon = time % 1 >= 0.5 ? ":" : " ";
+					text = min + colon + sec;
+				}
+				else
+				{
+					if( !PlayedAlarm )
+					{
+						PlayedAlarm = true;
+						$('#alarm').get(0).play();
+						$('#buttons').hide();
+					}
+
+					text = Date.now()/1000 % 0.25 >= 0.125 || Date.now()/1000 - to >= 3 ? "00:00" : "     ";
+					if( Date.now() / 1000 - to >= 3 )
+					{
+						window.clearInterval( ID );
+						$("#makeNew").fadeIn( 1000 );
+					}
+				}
+				$('#timer-fg').text( text );
+
+			}, 10 );
+		}
+
+		var KeepCookie = false;
+		if( urlParam( "until" ) )
+		{
+			var time = Number( urlParam( "until" ) );
+
+			if( !time )
+				error( "Invalid timer length." );
+			else if( Date.now() / 1000 > time )
+				window.location.href = '/';
+			else if( time - Date.now() / 1000 > 5999 )
+				error( "This timer is too long." );
+			else
+			{
+				KeepCookie = true;
+				$("#Settings").css( 'display', 'none' );
+				timer( time );
+			}
+			if( !KeepCookie )
+			{
+				document.cookie = "ownerof=;";
+			}
+		}
+		else if( urlParam( 'stopped' ) )
+		{
+			$('.timer').show();
+			var at = urlParam( 'stopped' );
+			$("#Settings").css( 'display', 'none' );
+			document.cookie = "ownerof=;";
+			$('#timer-fg').text( at );
+			$("#makeNew").fadeIn( 1000 );
+		}
+		else
+			document.cookie = "ownerof=;";
+
+
+	</script>
+
+
+</body>
+
