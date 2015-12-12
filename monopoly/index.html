@@ -1,0 +1,161 @@
+<html>
+
+	<head>
+
+		<title>Monopoly Scorekeeper</title>
+		<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+		<style>
+
+			@font-face {
+				font-family: Monopoly;
+				src: url( 'kabel.ttf' );
+			}
+			body
+			{
+				background-color: #3054A8;
+				color: #FFFFFF;
+				font-family: "Franklin Gothic Medium";
+				font-size: 24px;
+
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate( -50%, -50% );
+				-webkit-transform: translate( -50%, -50% );
+				text-align: center;
+			}
+			h1
+			{
+				font-family: Monopoly;
+				background-color: #C50008;
+				border: 4px solid black;
+				text-shadow: -4px 4px #141E22;
+				padding: 4px 16px;
+				font-weight: normal;
+			}
+			th, td 
+			{
+				border: 1px solid white;
+			}
+			th
+			{
+				font-weight: normal;
+			}
+			#players
+			{
+				font-family: Monopoly;
+				list-style-type: none;
+				padding: 0;
+				margin-left: auto;
+				margin-right: auto;
+
+				width: 600px;
+				border: 8px solid black;
+				-webkit-border-radius: 8px;
+				border-radius: 8px;
+			}
+			.right
+			{
+				position: absolute;
+				right: 0;
+				top:0;
+			}
+			/* colors for each player */
+			li
+			{
+				text-shadow: 2px 2px 2px black;
+				text-transform: uppercase;
+				text-align: left;
+				position: relative;
+				font-size: 32px;
+			}
+			a
+			{
+				display: block;
+				width: 100%;
+				text-decoration: none;
+				background-color: rgba( 0,0,0, 0 );
+			}
+			li a
+			{
+				color: inherit;
+			}
+			a:hover
+			{
+				background-color: rgba( 0,0,0, 0.3 );
+			}
+			a:active
+			{
+				background-color: rgba( 0,0,0, 0.2 );
+			}
+			.button
+			{
+				text-shadow: 2px 2px 2px black;
+				color: white;
+			}
+			.green
+			{
+				color: #00FF00;
+			}
+			.red
+			{
+				color: #FF0000;
+			}
+
+			li:nth-child(1)
+			{
+				text-shadow: 2px 2px 2px gray;
+				background: white;
+				color: black;
+			}
+			li:nth-child(2)
+			{
+				background: #EE5855;
+			}
+			li:nth-child(3)
+			{
+				background: #F1BE80;
+			}
+			li:nth-child(4)
+			{
+				background: #F4F372;
+			}
+			li:nth-child(5)
+			{
+				background: #78DA71;
+			}
+			li:nth-child(6)
+			{
+				background: #60C0FF;
+			}
+			li:nth-child(7)
+			{
+				background: #CF62F8;
+			}
+			li:nth-child(8)
+			{
+				background: #FAB0E8;
+			}
+
+		</style>
+
+	</head>
+
+	<body>
+
+		<h1>MONOPOLY</h1>
+		<div id="status">Select a player to perform an action on</div>
+		<br>
+		<div id="controls"></div>
+		<div id="cancel"></div>
+		<ul id="players">
+		</ul>
+		<a class="button green" href="javascript:addPlayer()">+ Add Player</a>
+		<a class="button" href="javascript:save()">Save Data</a>
+		<a class="button" href="javascript:load()">Load Data</a>
+		<a class="button red" href="javascript:reset()">Reset Everything</a>
+
+		<script src="script.js"></script>
+	</body>
+
+</html>
