@@ -3,6 +3,10 @@ var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456
 // this base64 is modified to be URL friendly and is NOT true base64
 
 
+function status( text )
+{
+	return $('#status').html( text );
+}
 function urlParam( name ) // stackoverflow
 {
 	var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
@@ -19,13 +23,33 @@ if( urlParam( 'd' ) && urlParam( 'd' ) !== 0 )
 {
 	var param = urlParam( 'd' );
 	param = Base64.decode( param );
-	Players = JSON.parse( param );
-	var count = 0;
-	for( var v in Players )
+
+	var KeepGoing = true;
+	try
 	{
-		count++;
+		Players = JSON.parse( param );
 	}
-	Players.length = count;
+	catch( err )
+	{
+		KeepGoing = false;
+
+		setTimeout( function()
+		{
+			status( status().html() + '<br><div class="red">Save data is corrupted or invalid. Sorry!</div>' );
+		}, 500 );
+		setTimeout( resetConfirm, 3000 );
+	}
+	if( KeepGoing )
+	{
+		var count = 0;
+		for( var v in Players )
+		{
+			if( v === 'length' )
+				continue;
+			count++;
+		}
+		Players.length = count;
+	}
 }
 
 
@@ -33,13 +57,18 @@ function setParams( params )
 {
 	var url = window.location.href;
 	var ind = url.indexOf( "?" );
+	var str;
+	if( typeof params == "object" )
+		str = Base64.encode( JSON.stringify( params ) );
+	else
+		str = params;
 	if( ind < 0 )
 	{
-		window.location.href += "?d=" + Base64.encode( JSON.stringify( params ) );
+		window.location.href += "?d=" + str;
 	}
 	else
 	{
-		window.location.href = url.substring( 0, ind ) + "?d=" + Base64.encode( JSON.stringify( params ) );
+		window.location.href = url.substring( 0, ind ) + "?d=" + str;
 	}
 }
 function saveParams()
@@ -57,11 +86,21 @@ function comma(x) {
 	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-function status( text )
-{
-	$('#status').text( text );
-}
 
+
+// resetting
+function reset()
+{
+	status( 'Are you SURE you want to reset? This game will NOT be saved!' );
+	$('#controls').html('').addButton( 'RESET', 'resetConfirm', 'red' );
+	$('#cancel').addButton(
+		'Cancel', 'cancelChanges'
+	);
+}
+function resetConfirm()
+{
+	window.location.href = window.location.href.substring( 0, window.location.href.indexOf( '?' ) );
+}
 
 
 if( Players.length === 0 )
@@ -80,7 +119,7 @@ else
 		var makeRed = Number( Players[name] ) < 0 || Players[name] === 'BANKRUPT';
 
 		var money = Number( Players[ name ] );
-		if( !money )
+		if( Players[name] === 'BANKRUPT' )
 			money = "BANKRUPT";
 		else
 			money = '$' + comma( money );
@@ -102,6 +141,11 @@ var inUse = false;
 function cancelChanges()
 {
 	window.location.href = window.location.href;
+}
+
+if( Players.length >= 8 )
+{
+	$("#addPlayer").hide();
 }
 
 // player adding
@@ -137,11 +181,12 @@ function submitPlayer()
 }
 
 var curPly;
-var selectCallback;
+var recipient;
+var pickingPlayer;
 // player actions
 function selectPlayer( name )
 {
-	if( !Players[ name ] )
+	if( Players[ name ] === undefined )
 		return;
 	var money = Players[name];
 
@@ -160,12 +205,33 @@ function selectPlayer( name )
 		);
 
 	}
-	else if( selectCallback )
+	else if( pickingPlayer && name !== curPly )
 	{
-		selectCallback( name );
+		recipient = name;
+		spendMoneyNext();
 	}
 
 }
+function getAmount() // gets amount entered in amount textbox
+{
+	var Equation = $('#amount').val();
+	Equation = Equation.replace( /[^\d\(\)\.\*\/+-]/g, '' );
+	var Result = eval( Equation );
+	if( Result === undefined )
+	{
+		status( 'Please enter a valid amount' );
+		return -1;
+	}
+	return Math.max( 0, Result );
+}
+function canAfford( ply, amount )
+{
+	if( Players[ply] === "BANKRUPT" )
+		return false;
+	return Players[ply] >= amount;
+}
+
+
 
 // money from bank
 function addMoney()
@@ -177,8 +243,102 @@ function addMoney()
 }
 function addMoneyFinish()
 {
-	
+	var money = getAmount();
+	if( money < 0 )
+		return;
+	Players[ curPly ] += money;
+	saveParams();
 }
+
+
+
+
+// go
+function goMoney()
+{
+	Players[ curPly ] += 200;
+	saveParams();
+}
+
+
+
+
+
+// give to bank
+function takeMoney()
+{
+	status( 'How much?' );
+	$('#controls').html('').append(
+		$('<input>').attr( 'type', 'text' ).attr( 'id', 'amount' )
+	).addButton( 'Submit', 'takeMoneyFinish', 'green' );
+}
+var oldAmount;
+var override = false;
+function takeMoneyFinish()
+{
+	var money;
+	if( oldAmount )
+		money = oldAmount;
+	else
+		money = getAmount();
+	if( money < 0 )
+		return;
+	if( !canAfford( curPly, money ) && !override )
+	{
+		oldAmount = money;
+		status( 'Giving this to the bank will put "' + curPly + '" in debt. Do you want to continue?');
+		$('#controls').html('').addButton( 'Yes', 'takeMoneyFinish', 'green' );
+		override = true;
+		return;
+	}
+	Players[ curPly ] -= money;
+	saveParams();
+}
+
+
+
+
+// giving to player
+function spendMoney()
+{
+	status( 'Who will be getting this money? (pick in player list)' );
+	pickingPlayer = true;
+	$('#controls').html('');
+}
+
+function spendMoneyNext()
+{
+	status( 'How much will "' + curPly + '" be giving "' + recipient + '"?' );
+	$('#controls').html('').append(
+		$('<input>').attr( 'type', 'text' ).attr( 'id', 'amount' )
+	).addButton( 'Submit', 'spendMoneyFinish', 'green' );
+}
+
+var overrideSpend = false;
+function spendMoneyFinish()
+{
+	var money;
+	if( oldAmount )
+		money = oldAmount;
+	else
+		money = getAmount();
+	if( money < 0 )
+		return;
+	if( !canAfford( curPly, money ) && !overrideSpend )
+	{
+		oldAmount = money;
+		status( 'Giving this to "' + recipient + '" will put "' + curPly + '" in debt. Do you want to continue?');
+		$('#controls').html('').addButton( 'Yes', 'spendMoneyFinish', 'green' );
+		overrideSpend = true;
+		return;
+	}
+	Players[ curPly ] -= money;
+	Players[ recipient ] += money;
+	saveParams();
+}
+
+
+
 
 // bankruptcy
 var confirming = false;
@@ -195,3 +355,38 @@ function bankrupt()
 	$('#controls').html('').addButton( 'Yes', 'bankrupt', 'red' );
 }
 
+
+
+function save()
+{
+	if( inUse )
+		return;
+	inUse = true;
+	status( 'Copy the text in the text box and save it somewhere for future use. When you want to use it, click "Load Data" and paste the data.' );
+	$('#controls').html('').append(
+		$('<input>').attr( 'type', 'text' ).attr( 'id', 'saveData' )
+	).addButton( 'Done', 'cancelChanges', 'green' );
+	$('#saveData').val( urlParam( 'd' ) ).mouseover( function()
+	{
+		$(this).select();
+	});
+}
+function load()
+{
+	if( inUse )
+		return;
+	inUse = true;
+	status( 'Paste the save data in the box below, then click "Load"' );
+	$('#controls').html('').append(
+		$('<input>').attr( 'type', 'text' ).attr( 'id', 'saveData' )
+	).addButton( 'Load', 'loadFinish', 'green' );
+	$('#cancel').addButton(
+		'Cancel', 'cancelChanges'
+	);
+
+}
+function loadFinish()
+{
+	var data = $('#saveData').val();
+	setParams( data );
+}
