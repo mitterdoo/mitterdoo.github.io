@@ -86,11 +86,27 @@ function comma(x) {
 	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+$(document).ready( function()
+{
 
-
+	$('#ctrlDiv').hide();
+});
+$.fn.textWidth = function( text ){
+	var html_org = $(this).html();
+	var html_calc = '<span>' + text + '</span>';
+	$(this).html(html_calc);
+	var width = $(this).find('span:first').width();
+	$(this).html(html_org);
+	return width;
+};
+function horRule()
+{
+	$('#ctrlDiv').show();
+}
 // resetting
 function reset()
 {
+	horRule();
 	status( 'Are you SURE you want to reset? This game will NOT be saved!' );
 	$('#controls').html('').addButton( 'RESET', 'resetConfirm', 'red' );
 	$('#cancel').addButton(
@@ -106,16 +122,17 @@ function resetConfirm()
 if( Players.length === 0 )
 {
 	$('#players').append( $('<li>').css( "text-align", "center" ).text( "NO PLAYERS!" ) );
-	status( "Click \"Add Player\" at the bottom" );
+	status( "Click \"Add Player\" below" );
 }
 else
 {
 	//<li><a href="">NAME<div class="right">MONEY</div></a></li>
+	var i = -1;
 	for( var name in Players )
 	{
 		if( name == 'length' )
 			continue;
-
+		i++;
 		var makeRed = Number( Players[name] ) < 0 || Players[name] === 'BANKRUPT';
 
 		var money = Number( Players[ name ] );
@@ -127,12 +144,18 @@ else
 			$('<li>').append(
 				$('<div>').attr( 'class', 'right' ).text(money).toggleClass( 'red', makeRed )
 			).append(
-				money === "BANKRUPT" ?
-					$('<div>').text( name ) : 
+				(money === "BANKRUPT" ?
+					$('<div>').html( '<span>' + name + '</span>' ) : 
 					$('<a>').attr( 'href', 'javascript:selectPlayer("' + name.replace( /\\/g, '\\\\' ).replace( '"', '\\"' ) + '")' )
-					.text(name)
-			)
+					.html('<span>' + name + '</span>')).toggleClass( 'plyName', true )
+			).attr( 'id', 'player' + i )
 		);
+		if( $('#player' + i ).textWidth( name ) > 240 )
+		{
+			$('#player' + i ).css( 'font-size', 24 );
+		}
+		if( $('#player' + i ).textWidth( name ) > 240 )
+			$('#player' + i ).css( 'font-size', 18 );
 	}
 
 }
@@ -161,6 +184,7 @@ function addPlayer()
 	$('#cancel').addButton(
 		'Cancel', 'cancelChanges'
 	);
+	horRule();
 
 }
 function submitPlayer()
@@ -203,6 +227,7 @@ function selectPlayer( name )
 		$('#cancel').addButton(
 			'Cancel', 'cancelChanges'
 		);
+		horRule();
 
 	}
 	else if( pickingPlayer && name !== curPly )
@@ -370,6 +395,7 @@ function save()
 	{
 		$(this).select();
 	});
+	horRule();
 }
 function load()
 {
@@ -383,6 +409,7 @@ function load()
 	$('#cancel').addButton(
 		'Cancel', 'cancelChanges'
 	);
+	horRule();
 
 }
 function loadFinish()

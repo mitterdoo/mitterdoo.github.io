@@ -15,13 +15,8 @@
 				background-color: #3054A8;
 				color: #FFFFFF;
 				font-family: "Franklin Gothic Medium";
-				font-size: 18px;
+				font-size: 30px;
 
-				position: absolute;
-				top: 50%;
-				left: 50%;
-				transform: translate( -50%, -50% );
-				-webkit-transform: translate( -50%, -50% );
 				text-align: center;
 			}
 			h1
@@ -32,6 +27,9 @@
 				text-shadow: -4px 4px #141E22;
 				padding: 4px 16px;
 				font-weight: normal;
+				max-width: 300px;
+				font-size: 40px;
+				margin: auto;
 			}
 			th, td 
 			{
@@ -49,16 +47,17 @@
 				margin-left: auto;
 				margin-right: auto;
 
-				width: 600px;
+				width: 400px;
 				border: 8px solid black;
 				-webkit-border-radius: 8px;
 				border-radius: 8px;
 			}
-			.right
+			li .right
 			{
 				position: absolute;
 				right: 0;
 				top:0;
+				font-size: 32px;
 			}
 			/* colors for each player */
 			li
@@ -67,7 +66,7 @@
 				text-transform: uppercase;
 				text-align: left;
 				position: relative;
-				font-size: 24px;
+				font-size: 32px;
 			}
 			a
 			{
@@ -79,6 +78,15 @@
 			li a
 			{
 				color: inherit;
+				height: 41px;
+				position: relative;
+			}
+			li a span
+			{
+				position: absolute;
+				top: 50%;
+				transform: translate( 0, -50% );
+				-webkit-transform: translate( 0, -50% );
 			}
 			a:hover
 			{
@@ -119,6 +127,7 @@
 			li:nth-child(4)
 			{
 				background: #F4F372;
+				color: #93A2BC;
 			}
 			li:nth-child(5)
 			{
@@ -137,6 +146,33 @@
 				background: #FAB0E8;
 			}
 
+			/* aligning */
+			body
+			{
+				position: relative;
+			}
+			#leftSide
+			{
+				position: absolute;
+				width: 50%;
+				left: 0;
+			}
+			#rightSide
+			{
+				position: absolute;
+				width: 50%;
+				right: 0;
+			}
+			#ctrlDiv
+			{
+				background-color: white;
+				width: 100%;
+				height: 2px;
+				margin-top: 8px;
+				margin-bottom: 8px;
+			}
+
+
 		</style>
 
 	</head>
@@ -144,16 +180,22 @@
 	<body>
 
 		<h1>MONOPOLY</h1>
-		<div id="status">Select a player to perform an action on</div>
 		<br>
-		<div id="controls"></div>
-		<div id="cancel"></div>
-		<ul id="players">
-		</ul>
-		<a class="button green" id="addPlayer" href="javascript:addPlayer()">+ Add Player</a>
-		<a class="button" href="javascript:save()">Save Data</a>
-		<a class="button" href="javascript:load()">Load Data</a>
-		<a class="button red" href="javascript:reset()">Reset Everything</a>
+		<div id="status">Select a player to perform an action on</div>
+		<hr>
+		<div id="leftSide">
+			<div id="controls"></div>
+			<div id="cancel"></div>
+			<div id="ctrlDiv"></div>
+			<a class="button green" id="addPlayer" href="javascript:addPlayer()">+ Add Player</a>
+			<a class="button" href="javascript:save()">Save Data</a>
+			<a class="button" href="javascript:load()">Load Data</a>
+			<a class="button red" href="javascript:reset()">Reset Everything</a>
+		</div>
+		<div id="rightSide">
+			<ul id="players">
+			</ul>
+		</div>
 
 		<script src="script.js"></script>
 	</body>
