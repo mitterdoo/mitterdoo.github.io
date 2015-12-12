@@ -240,6 +240,7 @@
 			}
 			var ID;
 			var PlayedAlarm = false;
+			var ColonLit = true;
 			ID = setInterval( function()
 			{
 				var time = Math.max( 0, to - Date.now()/1000 );
@@ -270,7 +271,7 @@
 						$('#buttons').hide();
 					}
 
-					text = Date.now()/1000 % 0.25 >= 0.125 || Date.now()/1000 - to >= 3 ? "00:00" : "     ";
+					text = ColonLit || Date.now()/1000 - to >= 3 ? "00:00" : "     ";
 					if( Date.now() / 1000 - to >= 3 )
 					{
 						window.clearInterval( ID );
@@ -278,8 +279,9 @@
 					}
 				}
 				$('#timer-fg').text( text );
+				ColonLit = !ColonLit;
 
-			}, 10 );
+			}, 500 );
 		}
 
 		var KeepCookie = false;
