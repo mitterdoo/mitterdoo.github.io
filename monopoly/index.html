@@ -57,7 +57,7 @@
 				position: absolute;
 				right: 0;
 				top:0;
-				font-size: 32px;
+				font-size: 24px;
 			}
 			/* colors for each player */
 			li
@@ -75,18 +75,23 @@
 				text-decoration: none;
 				background-color: rgba( 0,0,0, 0 );
 			}
-			li a
+			li a, li div
 			{
 				color: inherit;
 				height: 41px;
 				position: relative;
 			}
-			li a span
+			span
 			{
 				position: absolute;
 				top: 50%;
-				transform: translate( 0, -50% );
-				-webkit-transform: translate( 0, -50% );
+				transform: translate( 4px, -50% );
+				-webkit-transform: translate( 4px, -50% );
+			}
+			.right span
+			{
+				transform: translate( calc( -100% - 4px ), -50% );
+				-webkit-transform: translate( calc( -100% - 4px ), -50% );
 			}
 			a:hover
 			{
@@ -188,6 +193,7 @@
 			<div id="cancel"></div>
 			<div id="ctrlDiv"></div>
 			<a class="button green" id="addPlayer" href="javascript:addPlayer()">+ Add Player</a>
+			<a class="button red" id="removePlayer" href="javascript:removePlayer()">- Remove Player</a>
 			<a class="button" href="javascript:save()">Save Data</a>
 			<a class="button" href="javascript:load()">Load Data</a>
 			<a class="button red" href="javascript:reset()">Reset Everything</a>

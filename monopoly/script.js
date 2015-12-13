@@ -142,7 +142,7 @@ else
 			money = '$' + comma( money );
 		$("#players").append(
 			$('<li>').append(
-				$('<div>').attr( 'class', 'right' ).text(money).toggleClass( 'red', makeRed )
+				$('<div>').attr( 'class', 'right' ).html('<span>' + money + '</span>').toggleClass( 'red', makeRed )
 			).append(
 				(money === "BANKRUPT" ?
 					$('<div>').html( '<span>' + name + '</span>' ) : 
@@ -170,14 +170,20 @@ if( Players.length >= 8 )
 {
 	$("#addPlayer").hide();
 }
+else if( Players.length == 0 )
+{
+	$('#removePlayer').hide();
+}
+var submitCallback;
 
-// player adding
+// player adding/removing
 function addPlayer()
 {
 	if( inUse )
 		return;
 	inUse = true;
 	status( "Enter the name of this player" );
+
 	$("#controls").append(
 		$('<input>').attr( 'type', 'text' ).attr( 'id', 'playerName' )
 	).addButton('Submit', 'submitPlayer', 'green');
@@ -204,9 +210,41 @@ function submitPlayer()
 	saveParams();
 }
 
+var removingPlayer;
+var playerToRemove;
+function removePlayer()
+{
+	if( inUse )
+		return;
+	inUse = true;
+	removingPlayer = true;
+	status( "Click the player you want to remove" );
+	$('#controls').html('');
+	$('#cancel').addButton(
+		'Cancel', 'cancelChanges'
+	);
+	horRule();
+
+}
+var confirmingRemove;
+function removePlayerFinish()
+{
+	if( confirmingRemove )
+	{
+		delete Players[ playerToRemove ];
+		saveParams();
+		return;
+	}
+	confirmingRemove = true;
+	status( 'Are you SURE you want to remove "' + playerToRemove + '"?<br>(TIP: You can make a player bankrupt by clicking their name)' );
+
+	$('#controls').addButton( 'Yes', 'removePlayerFinish', 'green' );
+}
+
 var curPly;
 var recipient;
 var pickingPlayer;
+var pickingBankruptPlayer;
 // player actions
 function selectPlayer( name )
 {
@@ -234,6 +272,16 @@ function selectPlayer( name )
 	{
 		recipient = name;
 		spendMoneyNext();
+	}
+	else if( pickingBankruptPlayer && name !== curPly )
+	{
+		recipient = name;
+		bankruptGive();
+	}
+	else if( removingPlayer )
+	{
+		playerToRemove = name;
+		removePlayerFinish();
 	}
 
 }
@@ -366,18 +414,31 @@ function spendMoneyFinish()
 
 
 // bankruptcy
-var confirming = false;
 function bankrupt()
 {
-	if( confirming )
-	{
-		Players[ curPly ] = "BANKRUPT";
-		saveParams();
-		return;
-	}
-	confirming = true;
+		//Players[ curPly ] = "BANKRUPT";
+		//saveParams();
 	status( 'Are you SURE you want to make "' + curPly + '" bankrupt?' );
-	$('#controls').html('').addButton( 'Yes', 'bankrupt', 'red' );
+	$('#controls').html('').addButton( 'Yes', 'bankruptNext', 'red' );
+}
+function bankruptNext()
+{
+	pickingBankruptPlayer = true;
+	status( 'Enter the total value of "' + curPly + '", then select the player to give this money to. Click "To Bank" if "' + curPly + '" owes to the bank.' );
+	$('#controls').html('').append(
+		$('<input>').attr( 'type', 'text' ).attr( 'id', 'amount' )
+	).addButton( 'To Bank', 'bankruptFinish', 'green' );
+}
+function bankruptGive()
+{
+	var money = getAmount();
+	Players[ recipient ] += money;
+	bankruptFinish();
+}
+function bankruptFinish()
+{
+	Players[ curPly ] = "BANKRUPT";
+	saveParams();
 }
 
 
