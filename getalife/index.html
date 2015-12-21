@@ -1,0 +1,199 @@
+<html>
+
+	<head>
+		<link rel="icon" type="image/png" href="favicon.png">
+		<title>The Game of Life</title>
+		<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+		<style>
+
+			@font-face {
+				font-family: Life;
+				src: url( 'Game of Life.ttf' );
+			}
+			body
+			{
+				background-color: #2AAF3E;
+				color: #FFFFFF;
+				font-family: "Franklin Gothic Medium";
+				font-size: 30px;
+
+				text-align: center;
+			}
+			th, td 
+			{
+				border: 1px solid white;
+			}
+			th
+			{
+				font-weight: normal;
+			}
+			#players
+			{
+				font-family: Life;
+				font-weight: bold;
+				list-style-type: none;
+				padding: 0;
+				margin-left: auto;
+				margin-right: auto;
+
+				width: 400px;
+				border: 8px solid black;
+				-webkit-border-radius: 8px;
+				border-radius: 8px;
+			}
+			li .right
+			{
+				position: absolute;
+				right: 0;
+				top:0;
+				font-size: 36px;
+			}
+			/* colors for each player */
+			li
+			{
+				text-shadow: 2px 2px 2px black;
+				text-transform: uppercase;
+				text-align: left;
+				position: relative;
+				font-size: 42px;
+			}
+			a
+			{
+				display: block;
+				width: 100%;
+				text-decoration: none;
+				background-color: rgba( 0,0,0, 0 );
+			}
+			li a, li div
+			{
+				color: inherit;
+				height: 41px;
+				position: relative;
+			}
+			span
+			{
+				position: absolute;
+				top: 50%;
+				transform: translate( 4px, -50% );
+				-webkit-transform: translate( 4px, -50% );
+				color: inherit;
+			}
+			.right span
+			{
+				transform: translate( -105%, -50% );
+				-webkit-transform: translate( -105%, -50% );
+			}
+			a:hover
+			{
+				background-color: rgba( 0,0,0, 0.3 );
+			}
+			a:active
+			{
+				background-color: rgba( 0,0,0, 0.2 );
+			}
+			.button
+			{
+				text-shadow: 2px 2px 2px black;
+				color: white;
+			}
+			.green
+			{
+				color: #00FF00;
+			}
+			.red
+			{
+				color: #FF0000;
+			}
+
+			li:nth-child(1)
+			{
+				text-shadow: 2px 2px 2px gray;
+				background: white;
+				color: black;
+			}
+			li:nth-child(2)
+			{
+				background: #EE5855;
+			}
+			li:nth-child(3)
+			{
+				background: #F1BE80;
+			}
+			li:nth-child(4)
+			{
+				background: #F4F372;
+				text-shadow: 0 0 4px black,0 0 4px black;
+			}
+			li:nth-child(5)
+			{
+				background: #78DA71;
+			}
+			li:nth-child(6)
+			{
+				background: #60C0FF;
+			}
+			li:nth-child(7)
+			{
+				background: #CF62F8;
+			}
+			li:nth-child(8)
+			{
+				background: #FAB0E8;
+			}
+
+			/* aligning */
+			body
+			{
+				position: relative;
+			}
+			#leftSide
+			{
+				position: absolute;
+				width: 50%;
+				left: 0;
+			}
+			#rightSide
+			{
+				position: absolute;
+				width: 50%;
+				right: 0;
+			}
+			#ctrlDiv
+			{
+				background-color: white;
+				width: 100%;
+				height: 2px;
+				margin-top: 8px;
+				margin-bottom: 8px;
+			}
+
+
+		</style>
+
+	</head>
+
+	<body>
+
+		<h1><img src="logo.png"></h1>
+		<br>
+		<div id="status">Select a player to perform an action on</div>
+		<hr>
+		<div id="leftSide">
+			<div id="controls"></div>
+			<div id="cancel"></div>
+			<div id="ctrlDiv"></div>
+			<a class="button green" id="addPlayer" href="javascript:addPlayer()">+ Add Player</a>
+			<a class="button red" id="removePlayer" href="javascript:removePlayer()">- Remove Player</a>
+			<a class="button" href="javascript:save()">Save Data</a>
+			<a class="button" href="javascript:load()">Load Data</a>
+			<a class="button red" href="javascript:reset()">Reset Everything</a>
+		</div>
+		<div id="rightSide">
+			<ul id="players">
+			</ul>
+		</div>
+
+		<script src="script.js"></script>
+	</body>
+
+</html>
