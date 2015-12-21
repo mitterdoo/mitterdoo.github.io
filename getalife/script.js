@@ -148,10 +148,10 @@ else
 		);
 		if( $('#player' + i ).textWidth( name ) > 300 )
 		{
-			$('#player' + i ).css( 'font-size', 36 );
+			$('#player' + i ).css( 'font-size', 24 );
 		}
 		if( $('#player' + i ).textWidth( name ) > 300 )
-			$('#player' + i ).css( 'font-size', 24 );
+			$('#player' + i ).css( 'font-size', 18 );
 	}
 
 }
