@@ -1,0 +1,146 @@
+<html>
+
+	<head>
+		<title>Deal or No Deal</title>
+		<style>
+
+			@font-face {
+				font-family: EurostileBlack;
+				src: url( 'eurostileblack.ttf' );
+			}
+			@font-face {
+				font-family: Eurostile;
+				src: url( 'eurostile.ttf' );
+			}
+			img
+			{
+				max-width: 100%;
+				height: auto;
+				width: auto;
+			}
+			img.small
+			{
+				max-width:50%;
+			}
+			html
+			{
+				font-family: Eurostile;
+				font-size: 24px;
+				font-weight: 800;
+				background-color: black;
+				background-image: url( 'bg.jpg' );
+				background-size: 100%;
+				background-attachment: fixed;
+				background-position: center;
+				background-repeat: no-repeat;
+				text-align: center;
+			}
+			h1
+			{
+				font-size: 32px;
+				font-family: EurostileBlack;
+				display: inline-block;
+				padding-left: 48px;
+				padding-right: 48px;
+				background-color: rgb( 213, 183, 70 );
+				border-style: solid;
+				border-color: black;
+				text-transform: uppercase;
+			}
+			h1.special
+			{
+				background-color: rgb( 200,200,200 );
+				border-color: red;
+			}
+
+			p
+			{
+
+				text-align: justify;
+			}
+
+			div.subtitle
+			{
+				text-align: center;
+				font-size: 18px;
+			}
+
+			body
+			{
+				max-width: 1024px;
+				display: inline-block;
+				width: auto;
+				padding: 16px 32px;
+				background-color: rgba( 255, 255, 255, 0.7 );
+				border-radius: 8px;
+				-webkit-border-radius: 8px;
+				-moz-border-radius: 8px;
+			}
+
+		</style>
+	</head>
+
+	<body>
+		<img src="logo.png" />
+		<br>
+		<h1>What it is</h1>
+		<p>
+			Deal or No Deal is a <a href="http://metastruct.org">Metastruct</a> minigame created by <a href="https://steamcommunity.com/id/mitterdoo">mitterdoo</a>. It was originally a television show that inspired the creation in Garry's Mod. This depiction is based off of the American show. The goal of the game is to win a reasonable amount of money from the game.
+		</p>
+
+		<h1>Basics</h1>
+		<p>
+			The game starts with 26 cases on the stage. Each one has a random value inside it picked from the value board on the right. The player then picks one case to keep to themselves as long as they wish. However, they do not get to see what's inside until the end of the game, and neither does the banker. If the <i>very end</i> of the game is reached (where the player turned down all offers), the player wins whatever is inside their case.
+		</p>
+
+		<h1>Eliminating Cases</h1>
+		<p>
+			After the player has picked their personal case, they go through rounds of picking remaining cases on the stage and opening them, eliminating their values from the board. Every case opened shows that what's inside is <i>not</i> inside the player's personal case. That being said, it's bad when the player opens a case with a large value inside, and especially bad when the case has a million inside.
+		</p>
+		<p>
+			There are 9 rounds of eliminating cases. The first one starts with eliminating 6 cases, the second round 5, third 4, and so on until each round eliminates one case at a time. Between these rounds are offers that present the opportunity for the player to sell their case to the banker behind the seats.
+		</p>
+
+		<h1>Offers</h1>
+		<br>
+		<img src="banker.jpg" class="small"/><br>
+		<div class="subtitle">The banker</div><br>
+		<p>
+
+			Between each round, the banker proposes an offer of money for the player's case. The banker doesn't know what's inside it, either, so he studies your behavior and which values remain on the board. He then reveals his offer to you, where you get to make the choice of the game: <u>Deal, or No Deal?</u>
+
+		</p>
+		<p>
+			Should the player accept the banker's offer, they receive their money. If the game has progressed far enough (6 or less values remain), the player gets to see what <i>would</i> have happened if they continued to play the game to determine whether or not they made a good deal. The game progresses, keeping the original offer ready for the player, showing where the offers would have gone if they went on. When there is just one case on stage and the personal case remaining, the player's personal case is opened and revealed. Their case is also revealed immediately if the game hasn't gotten far enough to reveal the rest of the cases.
+		</p>
+		<p>
+			Otherwise, if the player declines his offer, the game progresses to the next round. If there is only one case on stage and the personal case, the end of the game has been reached, where the player must make one last decision.
+		</p>
+
+		<h1>The End</h1>
+		<p>
+			When the game has gotten to the point where there's just one more case on the stage at the beginning of a round, the player is left with one more offer: swap their personal case with the remaining case, or keep it? Anything can happen at this point. After this choice has been made, whatever their current personal case is, the player wins what is inside. The player either wins the higher value remaining, or the lowest. If the player <span style="color:red;">wins the million</span>, there is mass celebration, and the game ends.
+		</p>
+		<img src="winner.jpg" class="small"/<br>
+		<div class="subtitle"><a href="http://steamcommunity.com/id/76561198093185405">Google</a> winning a small loan of a million dollars</div>
+
+		<h1 class="special">Million Dollar Mission</h1>
+		<p>
+			The Million Dollar Mission is a special addition to Deal or No Deal. Each time a player is picked to start the game, there is a 1 in 500 chance the mission will commence. When the game starts during the mission, another million is added to the board for the player to potentially win. If the player does not win the million, even if it is revealed to be inside their case, yet another million is added for the next game.
+		</p>
+		<p>
+			There can be at most 13 millions on the board; the whole right side of the board. There is also a possibility of eliminating all values <i>but</i> the millions. When this happens, the player automatically wins the million. As soon as a player wins a million, the mission ends and the value board resets to only one million on it.
+		</p>
+
+		<h1>When to Play</h1>
+		<p>
+			This minigame can be played during weekends on any Metastruct server that is running map version 151 and up. You'll know if the map is correct when it
+			has this room in the lobby:
+		</p>
+		<img src="where.jpg" class="small"/>
+		<p>
+			Because the minigame rewards a substantial amount of money in the first offers, players are only permitted to play <u>once per weekend</u>.
+		</p>
+	</body>
+
+</html>
